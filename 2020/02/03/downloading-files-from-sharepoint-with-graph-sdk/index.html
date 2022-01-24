@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Downloading files from SharePoint with Graph SDK | Jonas Hendrickx</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="Downloading files from SharePoint with Graph SDK" />
+<meta name="author" content="Jonas Hendrickx" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This tutorial was written with Microsoft SharePoint Online in mind. If you’re using on-premises, things may not work out as expected." />
+<meta property="og:description" content="This tutorial was written with Microsoft SharePoint Online in mind. If you’re using on-premises, things may not work out as expected." />
+<link rel="canonical" href="/2020/02/03/downloading-files-from-sharepoint-with-graph-sdk/" />
+<meta property="og:url" content="/2020/02/03/downloading-files-from-sharepoint-with-graph-sdk/" />
+<meta property="og:site_name" content="Jonas Hendrickx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-03T15:30:00-06:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Downloading files from SharePoint with Graph SDK" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Jonas Hendrickx"},"@type":"BlogPosting","headline":"Downloading files from SharePoint with Graph SDK","dateModified":"2020-02-03T15:30:00-06:00","datePublished":"2020-02-03T15:30:00-06:00","description":"This tutorial was written with Microsoft SharePoint Online in mind. If you’re using on-premises, things may not work out as expected.","url":"/2020/02/03/downloading-files-from-sharepoint-with-graph-sdk/","mainEntityOfPage":{"@type":"WebPage","@id":"/2020/02/03/downloading-files-from-sharepoint-with-graph-sdk/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Jonas Hendrickx" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jonas Hendrickx</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/rgr-fm-privacy-policy.html">RGR FM Privacy Policy</a><a class="page-link" href="/my-work/uscis-case.html">USCIS Case</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Downloading files from SharePoint with Graph SDK</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2020-02-03T15:30:00-06:00" itemprop="datePublished">Feb 3, 2020
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Jonas Hendrickx</span></span></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This tutorial was written with Microsoft SharePoint Online in mind. If you’re using on-premises, things may not work out as expected.</p>
+
+<p>There are several other ways you can go about this, for example using client id and client secret or a certificate. We will use a service account in our example.</p>
+
+<h2 id="requesting-our-service-account">Requesting our service account</h2>
+
+<p>In our case, we wanted to expose certain document libraries to the public. We will not require users to authenticate with our API. I went with a service account because it was straight forward and convenient coming from CSOM which only seems to work with .NET Framework at this time and not .NET Core.</p>
+
+<ol>
+  <li>Visit the ‘<strong>Microsoft Office 365 Admin Center</strong>‘.</li>
+  <li>Create a new user, and save the credentials. Disable any 2FA authentication if enabled. At the first sign in, sometimes you may have to link an e-mail or telephone number for a back-up.</li>
+  <li>Assign the required license.</li>
+  <li>Assign ‘User’ role, or more if necessary.</li>
+</ol>
+
+<p>Now the user is setup, we will create our enterprise application.</p>
+
+<ol>
+  <li>In the menu, open ‘<strong>Azure AD</strong>‘ or ‘Azure Active Directory’, this will bring you to the ‘<strong>Azure Active Directory admin center</strong>‘.</li>
+  <li>You will see ‘<strong>Enterprise Applications</strong>‘ in the menu, open it and proceed to create a new application.</li>
+  <li>You’re now asked to select the appropriate application type, we will use ‘<strong>application you’re developing</strong>‘ for our demo. Our demo will be a standalone ASP.NET Core API or Azure Function.</li>
+  <li>Now click ‘<strong>Ok, take me to App Registrations to register my new application.</strong>‘ to proceed to ‘<strong>App Registrations</strong>‘.</li>
+  <li>Click ‘<strong>New Registration</strong>‘ at the top.</li>
+  <li>Give it a meaningful name.</li>
+  <li>To keep our sanity, we will only use users in our active directory so for ‘<strong>Supported Account Types</strong>‘ we choose ‘<strong>Accounts in this organizational directory only (Single tenant)</strong>‘.</li>
+  <li>Click ‘Register’.<img loading="lazy" width="1692" height="850" class="wp-image-533" style="width: 600px;" src="https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial.jpg" alt="" srcset="https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial.jpg 1692w, https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial-300x151.jpg 300w, https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial-1024x514.jpg 1024w, https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial-768x386.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial-1536x772.jpg 1536w" sizes="(max-width: 1692px) 100vw, 1692px" /></li>
+  <li>Take a note of the ‘<strong>Application Id</strong>‘ (‘Client Id’) and ‘Directory Id’ (‘<strong>Tenant Id</strong>‘).</li>
+  <li>In ‘<strong>Authentication</strong>‘, set ‘<strong>Treat application as a public client.</strong>‘ to ‘<strong>Yes</strong>‘ and click ‘Save’.</li>
+  <li>Now go to ‘<strong>API Permissions</strong>‘.</li>
+  <li>Click ‘<strong>Add a permission</strong>‘.</li>
+  <li>Find and click the ‘<strong>SharePoint</strong>‘ tile.</li>
+  <li>Give it all the ‘<strong>Delegated</strong>‘ ‘<strong>Read</strong>‘ permissions so you have: ‘AllSites.Read’, ‘TermStore.Read.All’, ‘User.Read.All’</li>
+  <li>Then click the button ‘<strong>Grant admin consent for %username%</strong>‘.</li>
+</ol>
+
+<p>The changes could take a few minutes to propagate. Don’t panic if it doesn’t work immediately.</p>
+
+<h2 id="code">Code</h2>
+
+<h3 id="sample">Sample</h3>
+
+<p><a href="https://github.com/jonashendrickx/microsoft-graphsdk/">https://github.com/jonashendrickx/microsoft-graphsdk/</a></p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<p>You can get started by installing the required NuGet packages described at <a rel="noreferrer noopener" aria-label="this page (opens in a new tab)" href="https://docs.microsoft.com/en-us/graph/sdks/sdk-installation" target="_blank">this page</a> or below:</p>
+
+<ul>
+  <li>Microsoft.Graph</li>
+  <li>Microsoft.Graph.Auth</li>
+  <li>Microsoft.Graph.Core</li>
+  <li>(optional) System.Configuration.ConfigurationManager</li>
+</ul>
+
+<h3 id="setting-up-graph-sdk">Setting up Graph SDK</h3>
+
+<p>Follow all the instructions on <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/graph/sdks/sdks-overview" target="_blank">this page</a> to setup the Graph SDK. The required roles are <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/graph/api/driveitem-get-content?view=graph-rest-1.0&amp;tabs=http" target="_blank">mentioned next to the API calls</a>. You will have to assign these roles as mentioned above and then also add them to the Graph SDK client. You can check the sample for more details on how to do this. If your roles or permissions don’t seem to be working immediately, it’s because they might take a few minutes to take effect.</p>
+
+<p>The REST call ‘<strong>GET /sites/{siteId}/drive/items/{item-id}/content</strong>‘ would translate in C# as</p>
+
+<p>‘<strong>await _client.Sites[siteId].Drives[docLibId].Items[driveItemId].Content.Request().GetAsync()</strong>‘</p>
+
+<p>Hopefully this is enough to get you guys started! Have fun!</p>
+
+  </div><a class="u-url" href="/2020/02/03/downloading-files-from-sharepoint-with-graph-sdk/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Jonas Hendrickx</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Jonas Hendrickx</li><li><a class="u-email" href="mailto:jonashendrickx@outlook.com">jonashendrickx@outlook.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jonashendrickx</span></a></li><li><a href="https://www.twitter.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jonashendrickx</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -3,19 +3,22 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>About | Jonas Hendrickx</title>
+<title>How to setup next-i18next for next.js? | Jonas Hendrickx</title>
 <meta name="generator" content="Jekyll v4.2.1" />
-<meta property="og:title" content="About" />
+<meta property="og:title" content="How to setup next-i18next for next.js?" />
+<meta name="author" content="Jonas Hendrickx" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="/about/" />
-<meta property="og:url" content="/about/" />
+<meta name="description" content="Setting up your next.js project" />
+<meta property="og:description" content="Setting up your next.js project" />
+<link rel="canonical" href="/2020/05/06/how-to-setup-next-i18next-for-next-js/" />
+<meta property="og:url" content="/2020/05/06/how-to-setup-next-i18next-for-next-js/" />
 <meta property="og:site_name" content="Jonas Hendrickx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-06T02:53:51-05:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="About" />
+<meta property="twitter:title" content="How to setup next-i18next for next.js?" />
 <script type="application/ld+json">
-{"@type":"WebSite","headline":"About","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","url":"/about/","name":"Jonas Hendrickx","@context":"https://schema.org"}</script>
+{"author":{"@type":"Person","name":"Jonas Hendrickx"},"@type":"BlogPosting","headline":"How to setup next-i18next for next.js?","dateModified":"2020-05-06T02:53:51-05:00","datePublished":"2020-05-06T02:53:51-05:00","description":"Setting up your next.js project","url":"/2020/05/06/how-to-setup-next-i18next-for-next-js/","mainEntityOfPage":{"@type":"WebPage","@id":"/2020/05/06/how-to-setup-next-i18next-for-next-js/"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Jonas Hendrickx" /></head>
 <body><header class="site-header" role="banner">
@@ -35,26 +38,43 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title p-name" itemprop="name headline">How to setup next-i18next for next.js?</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2020-05-06T02:53:51-05:00" itemprop="datePublished">May 6, 2020
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Jonas Hendrickx</span></span></p>
   </header>
 
-  <div class="post-content">
-    <p>This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at <a href="https://jekyllrb.com/">jekyllrb.com</a></p>
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="setting-up-your-nextjs-project">Setting up your next.js project</h2>
 
-<p>You can find the source code for Minima at GitHub:
-<a href="https://github.com/jekyll">jekyll</a> /
-<a href="https://github.com/jekyll/minima">minima</a></p>
+<p>First, visit the <a rel="noreferrer noopener" href="https://nextjs.org/docs/getting-started#setup" target="_blank">next.js website</a> to setup your project, scroll down to the setup section. If you have installed node, you should be able to execute the command below immediately as described on the next.js website.</p>
 
-<p>You can find the source code for Jekyll at GitHub:
-<a href="https://github.com/jekyll">jekyll</a> /
-<a href="https://github.com/jekyll/jekyll">jekyll</a></p>
+<pre class="wp-block-code"><code>npm init next-app</code></pre>
 
+<h2 id="installing-next-i18next-and-its-dependencies">Installing next-i18next and its dependencies</h2>
 
-  </div>
+<p>You may have to install several dependencies:</p>
 
+<ul>
+  <li>express</li>
+  <li>i18next</li>
+  <li>next-i18next</li>
+</ul>
+
+<h2 id="integrating-next-i18next">Integrating next-i18next</h2>
+
+<p>Make sure you have the necessary dependencies as shown below with the correct scripts configured in ‘packages.json’.</p>
+
+<p>https://gist.github.com/jonashendrickx/c37e4d3ff1b411e4318ad66f7e357313#file-packages-json</p>
+
+<p>You can modify any settings for next-i18next in your ‘next.config.js’. Make sure you define and export it as shown below.</p>
+
+<p>https://gist.github.com/jonashendrickx/c37e4d3ff1b411e4318ad66f7e357313#file-next-config-js</p>
+
+  </div><a class="u-url" href="/2020/05/06/how-to-setup-next-i18next-for-next-js/" hidden></a>
 </article>
 
       </div>

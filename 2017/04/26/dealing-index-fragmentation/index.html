@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Dealing with index fragmentation | Jonas Hendrickx</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="Dealing with index fragmentation" />
+<meta name="author" content="Jonas Hendrickx" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="What is index fragmentation?" />
+<meta property="og:description" content="What is index fragmentation?" />
+<link rel="canonical" href="/2017/04/26/dealing-index-fragmentation/" />
+<meta property="og:url" content="/2017/04/26/dealing-index-fragmentation/" />
+<meta property="og:site_name" content="Jonas Hendrickx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-04-26T10:05:47-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Dealing with index fragmentation" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Jonas Hendrickx"},"@type":"BlogPosting","headline":"Dealing with index fragmentation","dateModified":"2017-04-26T10:05:47-05:00","datePublished":"2017-04-26T10:05:47-05:00","description":"What is index fragmentation?","url":"/2017/04/26/dealing-index-fragmentation/","mainEntityOfPage":{"@type":"WebPage","@id":"/2017/04/26/dealing-index-fragmentation/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Jonas Hendrickx" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jonas Hendrickx</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/rgr-fm-privacy-policy.html">RGR FM Privacy Policy</a><a class="page-link" href="/my-work/uscis-case.html">USCIS Case</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Dealing with index fragmentation</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2017-04-26T10:05:47-05:00" itemprop="datePublished">Apr 26, 2017
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Jonas Hendrickx</span></span></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="what-is-index-fragmentation">What is index fragmentation?</h2>
+
+<p>As more people get a new phone number, we have to add them to our phone book. Ideally, our phone book has empty space, which is controlled with a fill factor. The fill factor decides how much free space to leave on each space. If there is not enough free space, then SQL Server needs to rearrange its records. However, since you can’t add any pages to the middle of a phone book, it has to add it in the back, which causes fragmentation.</p>
+
+<ul>
+  <li>Internal fragmentation: We have a new empty page that is nearly empty.</li>
+  <li>External fragmentation: Updating can cause problems too! For example, when one person gets married to another person. The wife’s last name changes, causing the record to be deleted in one location and to be added again into the other location. Deletes simply leave an empty space behind.</li>
+</ul>
+
+<p>Bad internal fragmentation (having lots of free space on the pages) means the index is bigger than it needs to be.  Instead of our phone book having 1,000 pages that are 100% full, we might have 1100 pages that are only 90% full.  This means every time we need to scan the index, it’ll take 10% longer (1,100 pages instead of 1,000).  This also means we need more memory to cache the same amount of data – because SQL Server has to cache the empty space on each page.  Our lowest unit of caching is a single page, not a record.</p>
+
+<p>Bad external fragmentation means our storage performance could be slower. A solid state drive for your server will perform much better in random reads than a traditional hard drive.</p>
+
+<h3 id="fixing-index-fragmentation-temporarily">Fixing Index Fragmentation Temporarily</h3>
+
+<p>If the database cannot be cached into the memory, you can solve it by <a href="https://technet.microsoft.com/en-us/library/ms187874(v=sql.105).aspx">rebuilding the index</a>.  Most people do this with scheduled maintenance plans, but those cause more problems down the road.  They rebuild every single index whether it’s necessary or not.  The maintenance plans ignore whether the table was written to since the last maintenance.</p>
+
+<p>This is a problem because rebuilding and defragmenting indexes causes SQL Server to write to the transaction log.  The more we write to the logs, the longer log backups take, the more we have to push across the network wire for database mirroring or log shipping, and the longer restores take.</p>
+
+<div id="attachment_15250" class="wp-caption alignright">
+  <p class="wp-caption-text">
+     
+  </p>
+</div>
+
+<p>We might even be doing more damage, too.  Some database administrators think they can fix fragmentation by setting a too low fill factor, for example 50%. By doing so, half of every page would be empty – so inserts would be blazing fast.  Reads, however, would be twice as slow.  In order to scan the entire phone book, we’d have twice as many pages we have to read.  Tweaking fill factor is a dangerous dance, much like the ones I did in high school.  (True story: broke my nose slam dancing.)  We might be forcing more empty space on each page every time we rebuild when we don’t need to.</p>
+
+<h3 id="fix-index-fragmentation-permanently">Fix Index Fragmentation Permanently</h3>
+
+<p>Start by caching your database or frequently accessed data in memory.  External fragmentation won’t matter as if we don’t have to make use of the hard drives.  The performance difference between unfragmented and fragmented data on a hard drive is much lower compared to the accessing the data from the memory rather than the hard drive.</p>
+
+<p>Next, dig into what your storage system is really doing with your data.  If you’re using shared storage that shares drives between a bunch of different servers, then all of your drive access will be random anyway.  Your hard drives are shared with other servers that are also making requests at the same time, so the drives will always be jumping all over the place to get data.  Defragging your indexes is just pointless busy work.</p>
+
+  </div><a class="u-url" href="/2017/04/26/dealing-index-fragmentation/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Jonas Hendrickx</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Jonas Hendrickx</li><li><a class="u-email" href="mailto:jonashendrickx@outlook.com">jonashendrickx@outlook.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jonashendrickx</span></a></li><li><a href="https://www.twitter.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jonashendrickx</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

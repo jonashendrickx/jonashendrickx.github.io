@@ -3,19 +3,22 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>About | Jonas Hendrickx</title>
+<title>Tackling common issues with Xamarin | Jonas Hendrickx</title>
 <meta name="generator" content="Jekyll v4.2.1" />
-<meta property="og:title" content="About" />
+<meta property="og:title" content="Tackling common issues with Xamarin" />
+<meta name="author" content="Jonas Hendrickx" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="/about/" />
-<meta property="og:url" content="/about/" />
+<meta name="description" content="Could not connect to the debugger" />
+<meta property="og:description" content="Could not connect to the debugger" />
+<link rel="canonical" href="/2016/11/08/tackling-common-issues-with-xamarin/" />
+<meta property="og:url" content="/2016/11/08/tackling-common-issues-with-xamarin/" />
 <meta property="og:site_name" content="Jonas Hendrickx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-11-08T19:33:56-06:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="About" />
+<meta property="twitter:title" content="Tackling common issues with Xamarin" />
 <script type="application/ld+json">
-{"@type":"WebSite","headline":"About","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","url":"/about/","name":"Jonas Hendrickx","@context":"https://schema.org"}</script>
+{"author":{"@type":"Person","name":"Jonas Hendrickx"},"@type":"BlogPosting","headline":"Tackling common issues with Xamarin","dateModified":"2016-11-08T19:33:56-06:00","datePublished":"2016-11-08T19:33:56-06:00","description":"Could not connect to the debugger","url":"/2016/11/08/tackling-common-issues-with-xamarin/","mainEntityOfPage":{"@type":"WebPage","@id":"/2016/11/08/tackling-common-issues-with-xamarin/"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Jonas Hendrickx" /></head>
 <body><header class="site-header" role="banner">
@@ -35,26 +38,42 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <article class="post">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title p-name" itemprop="name headline">Tackling common issues with Xamarin</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-11-08T19:33:56-06:00" itemprop="datePublished">Nov 8, 2016
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Jonas Hendrickx</span></span></p>
   </header>
 
-  <div class="post-content">
-    <p>This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at <a href="https://jekyllrb.com/">jekyllrb.com</a></p>
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="could-not-connect-to-the-debugger">Could not connect to the debugger</h2>
 
-<p>You can find the source code for Minima at GitHub:
-<a href="https://github.com/jekyll">jekyll</a> /
-<a href="https://github.com/jekyll/minima">minima</a></p>
+<p>When you click the play-button to deploy your app and debug it, the Android app starts and immediately closes. In the console you can read that the debugging was stopped. If this is the case, the workaround is simple:</p>
 
-<p>You can find the source code for Jekyll at GitHub:
-<a href="https://github.com/jekyll">jekyll</a> /
-<a href="https://github.com/jekyll/jekyll">jekyll</a></p>
+<ol>
+  <li>Start <strong>‘Hyper-V Manager’</strong>.</li>
+  <li>Select the emulator you are trying to use.</li>
+  <li>Right-click the selected emulator, and click <strong>‘Settings’</strong>.</li>
+  <li>Expand the <strong>‘Hardware’</strong> section.</li>
+  <li>Click the plus-icon in front of <strong>‘Processor’</strong> to expand.</li>
+  <li>Click <strong>‘Compatibility’</strong>.</li>
+  <li>Uncheck <strong>‘Migrate to a physical computer with a different processor version’</strong>.</li>
+</ol>
 
+<h2 id="libaot-mscorlibdllso-not-found">libaot-mscorlib.dll.so not found</h2>
 
-  </div>
+<ol>
+  <li>Open your solution in Visual Studio 2015.</li>
+  <li>Right-click the Android project.</li>
+  <li>Click <strong>‘Properties’</strong>.</li>
+  <li>In the ‘Android Options’ section, uncheck <strong>‘Use Fast Deployment (debug mode only)’</strong>.</li>
+</ol>
 
+<p> </p>
+
+  </div><a class="u-url" href="/2016/11/08/tackling-common-issues-with-xamarin/" hidden></a>
 </article>
 
       </div>

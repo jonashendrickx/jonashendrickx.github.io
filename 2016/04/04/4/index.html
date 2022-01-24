@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>How to send an e-mail with Powershell and Exchange Online (Office 365) | Jonas Hendrickx</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="How to send an e-mail with Powershell and Exchange Online (Office 365)" />
+<meta name="author" content="Jonas Hendrickx" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="It took me some time to figure out. But I finally managed to get the right things together. Some sources stated that it is impossible to do this with Powershell, because it supposedly doesn’t support TLS. Apparently, the current Powershell version supports SSL/TLS. There were various templates on the internet that saved the encrypted password in a file. Which is a safer method than storing the password in the Powershell script file. I wanted to show you how to do this without much hassle." />
+<meta property="og:description" content="It took me some time to figure out. But I finally managed to get the right things together. Some sources stated that it is impossible to do this with Powershell, because it supposedly doesn’t support TLS. Apparently, the current Powershell version supports SSL/TLS. There were various templates on the internet that saved the encrypted password in a file. Which is a safer method than storing the password in the Powershell script file. I wanted to show you how to do this without much hassle." />
+<link rel="canonical" href="/2016/04/04/4/" />
+<meta property="og:url" content="/2016/04/04/4/" />
+<meta property="og:site_name" content="Jonas Hendrickx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-04-04T08:00:13-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="How to send an e-mail with Powershell and Exchange Online (Office 365)" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Jonas Hendrickx"},"@type":"BlogPosting","headline":"How to send an e-mail with Powershell and Exchange Online (Office 365)","dateModified":"2016-04-04T08:00:13-05:00","datePublished":"2016-04-04T08:00:13-05:00","description":"It took me some time to figure out. But I finally managed to get the right things together. Some sources stated that it is impossible to do this with Powershell, because it supposedly doesn’t support TLS. Apparently, the current Powershell version supports SSL/TLS. There were various templates on the internet that saved the encrypted password in a file. Which is a safer method than storing the password in the Powershell script file. I wanted to show you how to do this without much hassle.","url":"/2016/04/04/4/","mainEntityOfPage":{"@type":"WebPage","@id":"/2016/04/04/4/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Jonas Hendrickx" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jonas Hendrickx</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/rgr-fm-privacy-policy.html">RGR FM Privacy Policy</a><a class="page-link" href="/my-work/uscis-case.html">USCIS Case</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">How to send an e-mail with Powershell and Exchange Online (Office 365)</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-04-04T08:00:13-05:00" itemprop="datePublished">Apr 4, 2016
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Jonas Hendrickx</span></span></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>It took me some time to figure out. But I finally managed to get the right things together. Some sources stated that it is impossible to do this with Powershell, because it supposedly doesn’t support TLS. Apparently, the current Powershell version supports SSL/TLS. There were various templates on the internet that saved the encrypted password in a file. Which is a safer method than storing the password in the Powershell script file. I wanted to show you how to do this without much hassle.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Encrypt the password
+$encryptedPassword = ConvertTo-SecureString “MyUnencryptedPassword” -AsPlainText -Force
+
+# Create a credentials object with the e-mail and password
+$mycreds = New-Object System.Management.Automation.PSCredential (“yourlogin@mydomain.onmicrosoft.com”, $encryptedPassword)
+
+# Send the e-mail (should take less than 5 seconds)
+Send-MailMessage -To "receiver@domainname.com" -SmtpServer "smtp.office365.com" -Credential $mycreds -UseSsl "Hello World" -Port "587" -Body "Hello World,&lt;br/&gt;This is your first e-mail&lt;br/&gt;Kind regards,&lt;br/&gt;&lt;br/&gt;Your Support Bot" -From "yourlogin@mydomain.onmicrosoft.com" -BodyAsHtml
+</code></pre></div></div>
+
+<p>Your login or e-mail can also be replaced by the actual e-mail of the company, which would have been in my case <a href="mailto:firstname.lastname@domain.com">firstname.lastname@domain.com</a>. You don’t need to necessarily include the ‘onmicrosoft.com’ part.</p>
+
+  </div><a class="u-url" href="/2016/04/04/4/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Jonas Hendrickx</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Jonas Hendrickx</li><li><a class="u-email" href="mailto:jonashendrickx@outlook.com">jonashendrickx@outlook.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jonashendrickx</span></a></li><li><a href="https://www.twitter.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jonashendrickx</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

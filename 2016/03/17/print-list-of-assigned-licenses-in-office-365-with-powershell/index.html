@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Print list of assigned licenses in Office 365 with Powershell | Jonas Hendrickx</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="Print list of assigned licenses in Office 365 with Powershell" />
+<meta name="author" content="Jonas Hendrickx" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A client of mine regularly wanted to see a report of all users and the licenses that are assigned to them. I decided to write a script to save me and my client time. Feel free to re-use, modify and share my script and guide." />
+<meta property="og:description" content="A client of mine regularly wanted to see a report of all users and the licenses that are assigned to them. I decided to write a script to save me and my client time. Feel free to re-use, modify and share my script and guide." />
+<link rel="canonical" href="/2016/03/17/print-list-of-assigned-licenses-in-office-365-with-powershell/" />
+<meta property="og:url" content="/2016/03/17/print-list-of-assigned-licenses-in-office-365-with-powershell/" />
+<meta property="og:site_name" content="Jonas Hendrickx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-03-17T02:39:36-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Print list of assigned licenses in Office 365 with Powershell" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Jonas Hendrickx"},"@type":"BlogPosting","headline":"Print list of assigned licenses in Office 365 with Powershell","dateModified":"2016-03-17T02:39:36-05:00","datePublished":"2016-03-17T02:39:36-05:00","description":"A client of mine regularly wanted to see a report of all users and the licenses that are assigned to them. I decided to write a script to save me and my client time. Feel free to re-use, modify and share my script and guide.","url":"/2016/03/17/print-list-of-assigned-licenses-in-office-365-with-powershell/","mainEntityOfPage":{"@type":"WebPage","@id":"/2016/03/17/print-list-of-assigned-licenses-in-office-365-with-powershell/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Jonas Hendrickx" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jonas Hendrickx</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/rgr-fm-privacy-policy.html">RGR FM Privacy Policy</a><a class="page-link" href="/my-work/uscis-case.html">USCIS Case</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Print list of assigned licenses in Office 365 with Powershell</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-03-17T02:39:36-05:00" itemprop="datePublished">Mar 17, 2016
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Jonas Hendrickx</span></span></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>A client of mine regularly wanted to see a report of all users and the licenses that are assigned to them. I decided to write a script to save me and my client time. Feel free to re-use, modify and share my script and guide.</p>
+
+<ol>
+  <li>We need to allow our scripts to run on our machine first. Open a ‘Powershell Terminal’ as administrator.</li>
+  <li>This code will allow all Powershell scripts to run, even unsigned ones.<br />
+    [code lang=”powershell”]Set-ExecutionPolicy Unrestricted[/code]</li>
+  <li>Download and install ‘<a href="https://www.microsoft.com/en-us/download/details.aspx?id=41950" target="_blank">Microsoft Online Services Sign-In Assistant</a>‘.</li>
+  <li>Download and install ‘<a href="http://go.microsoft.com/fwlink/p/?linkid=236297" target="_blank">Windows Azure Active Directory Module for Windows Powershell</a>‘.</li>
+  <li>The code below will save a different file per license and list all the users for that license. Save it as a Powershell script file (*.ps1 extension). Easiest is to copy the code, paste it in Notepad and then save it with the ‘.ps1’ extension.<br />
+    [code lang=”powershell”]# requirements:<br />
+    # – https://mymicrosoftexchange.wordpress.com/2015/03/23/office-365-script-to-get-detailed-report-of-assigned-licenses/<br />
+    # – https://msdn.microsoft.com/en-us/library/azure/jj151815.aspx?tduid=(9269d7f0b13d3d4d833ba311fb827e91)(256380)(2459594)(TnL5HPStwNw-zZf.McskA8f.V84Ln4LbOw)()#BKMK_connect# The Output will be written to this file in the current working directory<br />
+    $LogFile = “Office_365_Licenses.csv”&lt;/p&gt; 
+    # Connect to Microsoft Online<br />
+    Import-Module MSOnline<br />
+    $Office365credentials = get-credential<br />
+    Connect-MsolService -Credential $Office365credentials</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>write-host &amp;#8220;Connecting to Office 365&amp;#8230;&amp;#8221;
+
+\# Get a list of all licences that exist within the tenant  
+$licensetype = Get-MsolAccountSku | Where {$_.ConsumedUnits -ge 1}
+
+\# Loop through all licence types found in the tenant  
+foreach ($license in $licensetype)  
+{  
+write-host(&amp;#8220;Reading license: &amp;#8221; + $license.SkuPartNumber)  
+$LogFile = $license.SkuPartNumber + &amp;#8220;.csv&amp;#8221;
+
+\# Gather users for this particular AccountSku  
+$users = Get-MsolUser -all | where {$\_.isLicensed -eq &amp;#8220;True&amp;#8221; -and $\_.licenses[0].accountskuid.tostring() -eq $license.accountskuid}
+
+\# Loop through all users and write them to the CSV file  
+foreach ($user in $users) {  
+write-host (&amp;#8220;Processing &amp;#8221; + $user.displayname)  
+$datastring = ($user.userprincipalname + &amp;#8220;,&amp;#8221; + $user.FirstName + &amp;#8221; &amp;#8221; + $user.LastName)
+
+#write to working directory  
+Out-File -FilePath $LogFile -InputObject $datastring -Encoding UTF8 -append  
+}  
+}
+
+write-host (&amp;#8220;Script Completed. Results available in &amp;#8221; + $LogFile)[/code]&lt;/li&gt; 
+
+  * Now run the script file in Powershell.&lt;/ol&gt; 
+
+&amp;nbsp;
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/2016/03/17/print-list-of-assigned-licenses-in-office-365-with-powershell/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Jonas Hendrickx</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Jonas Hendrickx</li><li><a class="u-email" href="mailto:jonashendrickx@outlook.com">jonashendrickx@outlook.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jonashendrickx</span></a></li><li><a href="https://www.twitter.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jonashendrickx</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

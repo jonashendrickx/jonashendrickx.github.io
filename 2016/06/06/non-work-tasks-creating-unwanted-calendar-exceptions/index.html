@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Non-work tasks creating unwanted calendar exceptions | Jonas Hendrickx</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="Non-work tasks creating unwanted calendar exceptions" />
+<meta name="author" content="Jonas Hendrickx" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Today I discovered one of the clients I was working for was not using Project Server correctly. They created a non-billable administrative task and marked it as ‘Non Work’ in Project Server. The downside to this is that a calendar exception is generated on the calendar of the resource that booked on this task, note that these calendar exceptions cannot be deleted manually or with CSOM, PSI, … In CSOM, an exception ‘PJClientCallableException’ will be thrown with ‘13020’ as error code." />
+<meta property="og:description" content="Today I discovered one of the clients I was working for was not using Project Server correctly. They created a non-billable administrative task and marked it as ‘Non Work’ in Project Server. The downside to this is that a calendar exception is generated on the calendar of the resource that booked on this task, note that these calendar exceptions cannot be deleted manually or with CSOM, PSI, … In CSOM, an exception ‘PJClientCallableException’ will be thrown with ‘13020’ as error code." />
+<link rel="canonical" href="/2016/06/06/non-work-tasks-creating-unwanted-calendar-exceptions/" />
+<meta property="og:url" content="/2016/06/06/non-work-tasks-creating-unwanted-calendar-exceptions/" />
+<meta property="og:site_name" content="Jonas Hendrickx" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2016-06-06T06:33:01-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Non-work tasks creating unwanted calendar exceptions" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Jonas Hendrickx"},"@type":"BlogPosting","headline":"Non-work tasks creating unwanted calendar exceptions","dateModified":"2016-06-06T06:33:01-05:00","datePublished":"2016-06-06T06:33:01-05:00","description":"Today I discovered one of the clients I was working for was not using Project Server correctly. They created a non-billable administrative task and marked it as ‘Non Work’ in Project Server. The downside to this is that a calendar exception is generated on the calendar of the resource that booked on this task, note that these calendar exceptions cannot be deleted manually or with CSOM, PSI, … In CSOM, an exception ‘PJClientCallableException’ will be thrown with ‘13020’ as error code.","url":"/2016/06/06/non-work-tasks-creating-unwanted-calendar-exceptions/","mainEntityOfPage":{"@type":"WebPage","@id":"/2016/06/06/non-work-tasks-creating-unwanted-calendar-exceptions/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Jonas Hendrickx" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jonas Hendrickx</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/rgr-fm-privacy-policy.html">RGR FM Privacy Policy</a><a class="page-link" href="/my-work/uscis-case.html">USCIS Case</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Non-work tasks creating unwanted calendar exceptions</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2016-06-06T06:33:01-05:00" itemprop="datePublished">Jun 6, 2016
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">Jonas Hendrickx</span></span></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><img loading="lazy" class="wp-image-137 alignleft" src="http://www.jonashendrickx.com/wp-content/uploads/2016/06/msproject_administrativenonworking.jpg" alt="msproject_administrativenonworking" width="372" height="360" srcset="https://www.jonashendrickx.com/wp-content/uploads/2016/06/msproject_administrativenonworking.jpg 577w, https://www.jonashendrickx.com/wp-content/uploads/2016/06/msproject_administrativenonworking-300x291.jpg 300w" sizes="(max-width: 372px) 100vw, 372px" />Today I discovered one of the clients I was working for was not using Project Server correctly. They created a non-billable administrative task and marked it as ‘Non Work’ in Project Server. The downside to this is that a calendar exception is generated on the calendar of the resource that booked on this task, note that these calendar exceptions cannot be deleted manually or with CSOM, PSI, … In CSOM, an exception ‘PJClientCallableException’ will be thrown with ‘13020’ as error code.</p>
+
+<p>This calendar exception will have the name “<strong>Exception ‘Resource Non-Working’ on calendar</strong>” as you can see in the screenshot on the left on May 17th 2016. In the list of the ‘Exceptions’ and ‘Work Weeks’ tab, you won’t find this exception. When we check the base calendar, we can also verify no calendar exceptions were present on that day defined by the base calendar.</p>
+
+<p>This brings us to checking the timesheet of the resource of the working week starting at Monday 16th of May 2016 till Friday 20th of May 2016. You can create and use a delegate for this or use any other method preferred.</p>
+
+<p>In the timesheet below we can see that 8 hours were booked on an administrative task ‘XXX – Non-billable Internal’. Now what you need to do is the following:</p>
+
+<ol>
+  <li>Go to ‘Server Settings’.</li>
+  <li>In the section ‘Time and Task Management’, click ‘Administrative Time’.</li>
+  <li>Find the task in the list.</li>
+  <li>If the task is of work type ‘<strong>Non Work</strong>‘, then change it to work type ‘<strong>Working</strong>‘.</li>
+</ol>
+
+<p><strong>Note:</strong> Due to a bug in Project Server 2013, the calendar exceptions will still be there after changing the work type to ‘Working’. You can recall every timesheet, edit the timesheet line, and then resubmit the timesheet. Then check the calendar again for your resource.</p>
+
+<p><img loading="lazy" class="wp-image-139 size-full aligncenter" src="http://www.jonashendrickx.com/wp-content/uploads/2016/06/msproject_administrativenonworking_timesheet.jpg" alt="msproject_administrativenonworking_timesheet" width="968" height="387" srcset="https://www.jonashendrickx.com/wp-content/uploads/2016/06/msproject_administrativenonworking_timesheet.jpg 968w, https://www.jonashendrickx.com/wp-content/uploads/2016/06/msproject_administrativenonworking_timesheet-300x120.jpg 300w, https://www.jonashendrickx.com/wp-content/uploads/2016/06/msproject_administrativenonworking_timesheet-768x307.jpg 768w" sizes="(max-width: 968px) 100vw, 968px" /></p>
+
+<p>In the scenario above we can conclude that the working type ‘Non Work’ was not used correctly and a different solution should be used.</p>
+
+  </div><a class="u-url" href="/2016/06/06/non-work-tasks-creating-unwanted-calendar-exceptions/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Jonas Hendrickx</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Jonas Hendrickx</li><li><a class="u-email" href="mailto:jonashendrickx@outlook.com">jonashendrickx@outlook.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jonashendrickx</span></a></li><li><a href="https://www.twitter.com/jonashendrickx"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jonashendrickx</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

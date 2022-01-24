@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2022-01-24T14:50:19-06:00</updated><id>/feed.xml</id><title type="html">Jonas Hendrickx</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><entry><title type="html">How log to Splunk Enterprise with HttpEventCollector in Java/Maven/Vaadin?</title><link href="/2022/01/12/how-log-to-splunk-enterprise-with-httpeventcollector-in-java-maven-vaadin/" rel="alternate" type="text/html" title="How log to Splunk Enterprise with HttpEventCollector in Java/Maven/Vaadin?" /><published>2022-01-12T09:47:30-06:00</published><updated>2022-01-12T09:47:30-06:00</updated><id>/2022/01/12/how-log-to-splunk-enterprise-with-httpeventcollector-in-java-maven-vaadin</id><content type="html" xml:base="/2022/01/12/how-log-to-splunk-enterprise-with-httpeventcollector-in-java-maven-vaadin/"><![CDATA[<h2 id="code">Code</h2>
+
+<p>First we need to add the required packages to our project. We do this by adding the references to ‘<strong>pom.xml</strong>‘.</p>
+
+<pre class="wp-block-preformatted">&lt;/repositories&gt;
+...
+&lt;repository&gt;
+  &lt;id&gt;splunk-artifactory&lt;/id&gt;
+  &lt;name&gt;Splunk Releases&lt;/name&gt;
+  &lt;url&gt;https://splunk.jfrog.io/splunk/ext-releases-local&lt;/url&gt;
+&lt;/repository&gt;
+...
+&lt;/repositories&gt;</pre>
+
+<p>Now we need to tell Maven the dependencies we actually want:</p>
+
+<pre class="wp-block-preformatted">&lt;dependencies&gt;
+...
+&lt;dependency&gt;
+  &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
+  &lt;artifactId&gt;logback-classic&lt;/artifactId&gt;
+  &lt;version&gt;1.2.10&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.splunk.logging&lt;/groupId&gt;
+  &lt;artifactId&gt;splunk-library-javalogging&lt;/artifactId&gt;
+  &lt;version&gt;1.8.0&lt;/version&gt;
+&lt;/dependency&gt;
+...
+&lt;/dependencies&gt;</pre>
+
+<p>Place the following content in a file called ‘logback.xml’. Read more <a href="https://logback.qos.ch/manual/configuration.html" target="_blank" rel="noreferrer noopener">here</a>.</p>
+
+<pre class="wp-block-preformatted">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;configuration&gt;
+    &lt;appender name="socket" class="com.splunk.logging.TcpAppender"&gt;
+        &lt;RemoteHost&gt;127.0.0.1&lt;/RemoteHost&gt;
+        &lt;Port&gt;8088&lt;/Port&gt;
+        &lt;layout class="ch.qos.logback.classic.PatternLayout"&gt;
+            &lt;pattern&gt;%thread %level: %msg%n&lt;/pattern&gt;
+        &lt;/layout&gt;
+    &lt;/appender&gt;
+    &lt;logger name="splunk.logger" additivity="false" level="INFO"&gt;
+        &lt;appender-ref ref="socket"/&gt;
+    &lt;/logger&gt;
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="socket"/&gt;
+    &lt;/root&gt;
+    &lt;appender name="http" class="com.splunk.logging.HttpEventCollectorLogbackAppender"&gt;
+        &lt;url&gt;${SPLUNK_URL}&lt;/url&gt;
+        &lt;token&gt;${SPLUNK_TOKEN}&lt;/token&gt;
+        &lt;source&gt;${SPLUNK_SOURCE}&lt;/source&gt;
+        &lt;sourcetype&gt;_json&lt;/sourcetype&gt;
+        &lt;messageFormat&gt;text&lt;/messageFormat&gt;
+        &lt;middleware&gt;HttpEventCollectorUnitTestMiddleware&lt;/middleware&gt;
+        &lt;layout class="ch.qos.logback.classic.PatternLayout"&gt;
+            &lt;pattern&gt;%msg&lt;/pattern&gt;
+        &lt;/layout&gt;
+    &lt;/appender&gt;
+    &lt;logger name="splunk.logger" additivity="false" level="INFO"&gt;
+        &lt;appender-ref ref="http"/&gt;
+    &lt;/logger&gt;
+    &lt;root level="INFO"&gt;
+        &lt;appender-ref ref="http"/&gt;
+    &lt;/root&gt;
+&lt;/configuration&gt;</pre>
+
+<p>You can now pass the URL, Source (for filtering your logs) and Token using environment variables or a different way. See ‘<a href="https://logback.qos.ch/manual/configuration.html" target="_blank" rel="noreferrer noopener">variable substitution</a>‘.</p>]]></content><author><name>Jonas Hendrickx</name></author><category term="Programming" /><summary type="html"><![CDATA[Code]]></summary></entry><entry><title type="html">How install Spain’s digital certificate on Arch-based Linux distributions?</title><link href="/2021/10/16/how-install-spains-digital-certificate-on-arch-based-linux-distributions/" rel="alternate" type="text/html" title="How install Spain’s digital certificate on Arch-based Linux distributions?" /><published>2021-10-16T08:15:56-05:00</published><updated>2021-10-16T08:15:56-05:00</updated><id>/2021/10/16/how-install-spains-digital-certificate-on-arch-based-linux-distributions</id><content type="html" xml:base="/2021/10/16/how-install-spains-digital-certificate-on-arch-based-linux-distributions/"><![CDATA[<h2 id="requirements">Requirements</h2>
+
+<p>Execute the code below. ‘<strong>base-devel</strong>‘ is a package group that includes tools needed for building (compiling and linking). It is not necessary for a basic install, and many users don’t need to install it. If you find it useful, you can either install it as part of your basic install, or later.</p>
+
+<pre>sudo pacman -S --needed-base-devel</pre>
+
+<h2 id="configuradorfnmt">ConfiguradorFNMT</h2>
+
+<pre>git clone https://aur.archlinux.org/configuradorfnmt.git<br /><br />cd configuradorfnmt<br /><br />makepkg -si</pre>
+
+<h2 id="autofirma">AutoFirma</h2>
+
+<pre>git clone https://aur.archlinux.org/autofirma.git<br /><br />cd autofirma<br /><br />makepkg -si</pre>
+
+<h2 id="installing-the-certificate-in-mozilla-firefox">Installing the certificate in Mozilla FireFox</h2>
+
+<ol>
+  <li>Open ‘<strong>Settings</strong>‘.</li>
+  <li>Search for ‘Certificates’.</li>
+  <li>Click ‘View Certificates’.</li>
+  <li>Open tab ‘<strong>Your certificates</strong>‘.</li>
+  <li>Click ‘<strong>Import</strong>‘.</li>
+  <li>Select your digital certificate and enter the password.</li>
+</ol>]]></content><author><name>Jonas Hendrickx</name></author><category term="Uncategorized" /><summary type="html"><![CDATA[Requirements]]></summary></entry><entry><title type="html">ThinkPad P14s AMD Gen 1 – Powerful Mobility – Review</title><link href="/2021/07/26/thinkpad-p14s-amd-gen-1-powerful-mobility-review/" rel="alternate" type="text/html" title="ThinkPad P14s AMD Gen 1 – Powerful Mobility – Review" /><published>2021-07-26T10:09:48-05:00</published><updated>2021-07-26T10:09:48-05:00</updated><id>/2021/07/26/thinkpad-p14s-amd-gen-1-powerful-mobility-review</id><content type="html" xml:base="/2021/07/26/thinkpad-p14s-amd-gen-1-powerful-mobility-review/"><![CDATA[<p>The ThinkPad P14s Gen 1 is, as the name suggests, a 14″ workstation. It directly competes with the HP ZBook 14u and Dell Precision 7405. I decided to purchase the AMD-version of the ThinkPad P14s Gen 1, because mainly Intel has been dominating the market for nearly 15 years, and wanted to support team red which has finally caught up after such a long time. That’s aside from the fact that AMD’s products are currently priced a lot better and provide more value for your money.<figure id="attachment_690" aria-describedby="caption-attachment-690" style="width: 640px" class="wp-caption aligncenter"></figure></p>
+
+<p><img loading="lazy" class="wp-image-690" src="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-28_170-1024x768.jpg" alt="Lid - ThinkPad P14s Gen 1" width="640" height="480" srcset="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-28_170-1024x768.jpg 1024w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-28_170-300x225.jpg 300w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-28_170-768x576.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-28_170-1536x1152.jpg 1536w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-28_170-2048x1536.jpg 2048w" sizes="(max-width: 640px) 100vw, 640px" /> &lt;figcaption id="caption-attachment-690" class="wp-caption-text"&gt;Lid – ThinkPad P14s Gen 1&lt;/figcaption&gt;&lt;/figure&gt;</p>
+
+<h2 id="background">Background</h2>
+
+<p>Before we head into specifics about this machine, let’s talk about the ThinkPad P-series. We have 3 screen sizes to choose from: 14″, 15″ and 17″. This makes the ThinkPad P14s Gen 1 the smallest entry in the mobile workstation line-up with a weight of up to 1.55kg. The ThinkPad P15 and P17 are the fastest, largest and heaviest models.</p>
+
+<p>For the 15″ models we have the ThinkPad P1, P15, P15s and P15v. The s-suffix indicates a thinner and lighter version, while the v-suffix stands for ‘value’. Think of a version of the ThinkPad P15 with an emphasis on CPU processing power rather than graphics performance offering either Intel UHD Graphics or Nvidia Quadro P560. There are also some sacrifices made in battery life and cheaper display panel options to name a few.</p>
+
+<p>The ThinkPad P1 can be considered a flagship model with a better balance between performance and mobility weighing only 1.7kgs. The ThinkPad P1 can only be configured up to a Nvidia Quadro T2000, while both the ThinkPad P15 and ThinkPad P17 max out with the Nvidia Quadro RTX 5000 Max-Q.</p>
+
+<p>The ThinkPad P14s Gen 1 and ThinkPad P15s Gen 1 are the only mobile workstation models that allow you to choose between AMD and Intel. It’s worth mentioning that the AMD-models are limited to the AMD Ryzen 7 Pro 4750U only.</p>
+
+<p>If you need personalized advice, just send me a message.</p>
+
+<h2 id="build-quality">Build Quality</h2>
+
+<p>The ThinkPad P14s is built with 50% PPS and 50% glass fiber reinforced plastics for the lid and palm rest. The bottom base cover is made of 50% PA and 50% glass fiber reinforced plastics.</p>
+
+<p>As with other ThinkPads, no paint was used in the manufacturing process.</p>
+
+<p>The laptop does not flex while it’s being held with one hand, of course, it is not recommended to hold it by one hand at the corners or near the edges.</p>
+
+<h2 id="connectivity">Connectivity<figure id="attachment_688" aria-describedby="caption-attachment-688" style="width: 640px" class="wp-caption aligncenter"></figure></h2>
+
+<p><img loading="lazy" class="wp-image-688" src="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-02_814-1024x768.jpg" alt="Left side - ThinkPad P14s Gen 1" width="640" height="480" srcset="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-02_814-1024x768.jpg 1024w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-02_814-300x225.jpg 300w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-02_814-768x576.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-02_814-1536x1152.jpg 1536w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-02_814-2048x1536.jpg 2048w" sizes="(max-width: 640px) 100vw, 640px" /> &lt;figcaption id="caption-attachment-688" class="wp-caption-text"&gt;Left side – ThinkPad P14s Gen 1&lt;/figcaption&gt;&lt;/figure&gt;</p>
+
+<p>On the left-side, we find a USB-C 3.2 Gen 2 port near the hinge, this is the one you should be using for charging. Right next to it is another USB-C 3.2 Gen 2 port if you look closely. But as you can tell it’s part of a larger port which serves as a docking connector.</p>
+
+<p>Check the accessories of the ThinkPad P14s if you wish to purchase a compatible docking station. Then we have a USB 3.2 Gen 1 port, there is another one on the right side of the laptop right next to the smart card reader.<figure id="attachment_689" aria-describedby="caption-attachment-689" style="width: 640px" class="wp-caption aligncenter"></figure></p>
+
+<p><img loading="lazy" class="wp-image-689" src="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-17_371-1024x768.jpg" alt="Right side - ThinkPad P14s Gen 1" width="640" height="480" srcset="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-17_371-1024x768.jpg 1024w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-17_371-300x225.jpg 300w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-17_371-768x576.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-17_371-1536x1152.jpg 1536w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-41-17_371-2048x1536.jpg 2048w" sizes="(max-width: 640px) 100vw, 640px" /> &lt;figcaption id="caption-attachment-689" class="wp-caption-text"&gt;Left side – ThinkPad P14s Gen 1&lt;/figcaption&gt;&lt;/figure&gt;</p>
+
+<p>Below is an overview if you need to have a refresher on the available bandwidth to the USB 3.2 Gen 1 specification:</p>
+
+<ul>
+  <li>USB 2.0: 480 Mbit/s</li>
+  <li>USB 3.2 Gen 1 (SuperSpeed USB 5Gbps, formely USB 3.0 / USB 3.1 Gen 1): 5 Gbit/s</li>
+  <li>USB 3.2 Gen 2 (SuperSpeed USB 10Gbps, formely USB 3.1 Gen 2): 10 Gbit/s</li>
+  <li>USB 3.2 Gen 2×2 (SuperSpeed USB 20Gbps): 20 Gbit/s</li>
+  <li>Thunderbolt™ 3: 40 Gbit/s</li>
+  <li>FireWire 400: 400 Mbit/s</li>
+  <li>FireWire 800: 800 Mbit/s</li>
+</ul>
+
+<p>Continuing on the left side, we also have a HDMI 2.0 port. Regarding external monitors, the ThinkPad P14s supports up to 4 independent displays via native display and 3 external monitors; supports external monitors via HDMI® (up to 4096×2160@60Hz), or two USB-C (up to 5120×2880@60Hz, DP mode via USB-C to DP dongle)</p>
+
+<p>We also find an AUX-port and a microSD card reader on the left side.</p>
+
+<h2 id="display">Display</h2>
+
+<p>Our model has a low power 400 nits FULL HD IPS panel with an advertised contrast ratio of 800:1 and 72% NTSC color accuracy. The display is great to use, and it does feel like progress has been made coming from a 300 nit display. For someone who occasionally works outdoors, this display is great value for the money. If you can afford the 500 nit panel, I can only encourage you.</p>
+
+<p>The only thing I hate about the display is that the brightness or white color feels a little bit too strong occasionally.</p>
+
+<p>There are 4 panels to choose from with 250, 300, 400 and 500 nits brightness each. Only the 300 nits and 500 nits panels come as multi-touch only. The most expensive 500 nits panel comes with ThinkPad Privacy Guard, which obscures the viewing angles from the sides. This is particularly useful if you work a lot in public places or work in the financial industry.</p>
+
+<h2 id="camera">Camera</h2>
+
+<p>At the top of the display panel we find the camera. You’ll either have a 720p or 720p+IR option. The latter is useful for Windows Hello if you wish to use face authentication. It works reliably in my experience as I have been using it for quite a few years.</p>
+
+<p>The ThinkShutter Camera works well in combination with the Lenovo Vantage Camera Privacy Guard setting. Meaning you can disable and cover up your camera without having to resort to using tape.</p>
+
+<p>If found the ThinkShutter to be extremely useful in times of remote working. I feel like I can work all day without being spied upon.<figure id="attachment_696" aria-describedby="caption-attachment-696" style="width: 665px" class="wp-caption aligncenter"></figure></p>
+
+<p><img loading="lazy" class="size-large wp-image-696" src="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-26_19-10-58_620-1024x768.jpg" alt="ThinkShutter - ThinkPad P14s Gen 1" width="665" height="499" srcset="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-26_19-10-58_620-1024x768.jpg 1024w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-26_19-10-58_620-300x225.jpg 300w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-26_19-10-58_620-768x576.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-26_19-10-58_620-1536x1152.jpg 1536w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-26_19-10-58_620-2048x1536.jpg 2048w" sizes="(max-width: 665px) 100vw, 665px" /> &lt;figcaption id="caption-attachment-696" class="wp-caption-text"&gt;ThinkShutter – ThinkPad P14s Gen 1&lt;/figcaption&gt;&lt;/figure&gt;</p>
+
+<p>If you do not have a physical ThinkShutter feature on a Lenovo product you may already own, please do check out Lenovo Vantage for the Camera Privacy Feature. It is extremely useful.</p>
+
+<pre>Our sponsor '<a href="https://www.eset.com/" target="_blank" rel="noopener">ESET</a>' also provides an extra layer of protection for your camera if need to be.</pre>
+
+<h2 id="keyboard">Keyboard</h2>
+
+<p>The keys have roughly 1.8mm of travel, typing is still fairly pleasant, and the keys do not feel mushy or soft to press. We’re getting a good amount of response from the key’s hinges.</p>
+
+<p>Our configuration (20Y1000ESP) comes with a back-lit Chicony keyboard. There are 3 other suppliers, your experience may be different.</p>
+
+<p>I wish the TrackPoint/TrackPad buttons had a little bit more key travel, but that is just a personal preference.<figure id="attachment_687" aria-describedby="caption-attachment-687" style="width: 480px" class="wp-caption aligncenter"></figure></p>
+
+<p><img loading="lazy" class="wp-image-687" src="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-34_091-768x1024.jpg" alt="Top down view of keyboard - ThinkPad P14s Gen 1" width="480" height="640" srcset="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-34_091-768x1024.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-34_091-225x300.jpg 225w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-34_091-1152x1536.jpg 1152w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-34_091-1536x2048.jpg 1536w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-34_091-scaled.jpg 1920w" sizes="(max-width: 480px) 100vw, 480px" /> &lt;figcaption id="caption-attachment-687" class="wp-caption-text"&gt;Top down view of keyboard – ThinkPad P14s Gen 1&lt;/figcaption&gt;&lt;/figure&gt;</p>
+
+<h2 id="maintenance">Maintenance</h2>
+
+<p>The ThinkPad P14s Gen 1 shares the same chassis with the ThinkPad T14 Gen 1. You can find the hardware maintenance manual on <a href="https://download.lenovo.com/pccbbs/mobiles_pdf/t14_gen1_p14s_gen1_hmm_en.pdf" target="_blank" rel="noopener">this page</a>. We verified that the keyboard was still easy to replace by using a prying tool and only removing two screws. Other components can also be removed or replaced without too much effort.</p>
+
+<h2 id="performance">Performance</h2>
+
+<p>The AMD Ryzen 7 Pro 4750U’s synthetic benchmarks do not disappoint as shown in the table below. The fan is also generally very quiet. It might moderately start spinning during a Microsoft Teams or Zoom meeting, but it’s not at all noisy to be of any concern.</p>
+
+<table style="border-collapse: collapse; width: 100%;">
+  <tr>
+    <th style="width: 20%;">
+       
+    </th>
+    
+    <th style="width: 20%;">
+      AMD Ryzen 7 Pro 4750U
+    </th>
+    
+    <th style="width: 20%;">
+      Intel Core i7-10610U
+    </th>
+  </tr>
+  
+  <tr>
+    <td style="width: 20%;">
+      PC Mark 10 Score
+    </td>
+    
+    <td style="width: 20%;">
+      5036
+    </td>
+    
+    <td style="width: 20%;">
+      4131
+    </td>
+  </tr>
+  
+  <tr>
+    <td style="width: 20%;">
+      PC Mark 10 Essentials
+    </td>
+    
+    <td style="width: 20%;">
+      9056
+    </td>
+    
+    <td style="width: 20%;">
+      8482
+    </td>
+  </tr>
+</table>
+
+<p> <figure id="attachment_686" aria-describedby="caption-attachment-686" style="width: 480px" class="wp-caption aligncenter"></figure></p>
+
+<p><img loading="lazy" class="wp-image-686" src="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-21_849-768x1024.jpg" alt="Charger - ThinkPad P14s Gen 1" width="480" height="640" srcset="https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-21_849-768x1024.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-21_849-225x300.jpg 225w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-21_849-1152x1536.jpg 1152w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-21_849-1536x2048.jpg 1536w, https://www.jonashendrickx.com/wp-content/uploads/2021/07/2021-07-19_13-40-21_849-scaled.jpg 1920w" sizes="(max-width: 480px) 100vw, 480px" /> &lt;figcaption id="caption-attachment-686" class="wp-caption-text"&gt;Charger – ThinkPad P14s Gen 1&lt;/figcaption&gt;&lt;/figure&gt;</p>]]></content><author><name>Jonas Hendrickx</name></author><category term="Microsoft" /><summary type="html"><![CDATA[The ThinkPad P14s Gen 1 is, as the name suggests, a 14″ workstation. It directly competes with the HP ZBook 14u and Dell Precision 7405. I decided to purchase the AMD-version of the ThinkPad P14s Gen 1, because mainly Intel has been dominating the market for nearly 15 years, and wanted to support team red which has finally caught up after such a long time. That’s aside from the fact that AMD’s products are currently priced a lot better and provide more value for your money.]]></summary></entry><entry><title type="html">Windows 11 Performance Tweaks</title><link href="/2021/07/03/windows-11-performance-tweaks/" rel="alternate" type="text/html" title="Windows 11 Performance Tweaks" /><published>2021-07-03T04:07:03-05:00</published><updated>2021-07-03T04:07:03-05:00</updated><id>/2021/07/03/windows-11-performance-tweaks</id><content type="html" xml:base="/2021/07/03/windows-11-performance-tweaks/"><![CDATA[<h2 id="build">Build</h2>
+
+<ul>
+  <li>Verified with build 22000.55.</li>
+</ul>
+
+<h2 id="disabling-animations">Disabling animations</h2>
+
+<p>The animations to perform just about any actions feel painfully slow when you’re coming from Windows 10. Luckily, there is a way to disable them.</p>
+
+<ol>
+  <li>Open ‘<strong>Settings</strong>‘.</li>
+  <li>Click ‘<strong>Accessibility</strong>‘ in the menu pane.</li>
+  <li>Choose ‘<strong>Visual Effects</strong>‘.</li>
+  <li>Disable ‘<strong>Animation Effects</strong>‘.</li>
+</ol>
+
+<h2 id="disabling-diagnostics--feedback">Disabling diagnostics &amp; feedback</h2>
+
+<ol>
+  <li>Open ‘<strong>Settings</strong>‘.</li>
+  <li>Click ‘<strong>Privacy &amp; Security</strong>‘ in the menu pane.</li>
+  <li>Click ‘<strong>Diagnostics &amp; Feedback</strong>‘.</li>
+  <li>Disable ‘<strong>Send optional diagnostic data</strong>‘.</li>
+  <li>Disable ‘<strong>Improve inking &amp; typing</strong>‘.</li>
+  <li>Disable ‘<strong>Tailored experiences</strong>‘.</li>
+</ol>
+
+<h2 id="microsoft-edge">Microsoft Edge</h2>
+
+<p>Microsoft Edge is using a lot of RAM by default.</p>
+
+<h3 id="disable-new-tab-preloading-in-memory">Disable new tab preloading in memory</h3>
+
+<ol>
+  <li>Open ‘<strong>Microsoft Edge</strong>‘.</li>
+  <li>Click the hamburger button at the top right.</li>
+  <li>Click ‘<strong>Settings</strong>‘.</li>
+  <li>Click ‘<strong>New tab page</strong>‘.</li>
+  <li>Disable ‘<strong>Preload the new tab page for a faster experience</strong>‘.</li>
+</ol>
+
+<h3 id="disable-hardware-acceleration">Disable hardware acceleration</h3>
+
+<p>Only disable this if you’re short on RAM and don’t watch videos frequently with Microsoft Edge.</p>
+
+<ol>
+  <li>Open ‘<strong>Microsoft Edge</strong>‘.</li>
+  <li>Click the hamburger button at the top right.</li>
+  <li>Click ‘<strong>Settings</strong>‘.</li>
+  <li>Click ‘<strong>System</strong>‘.</li>
+  <li>Disable ‘<strong>Use hardware acceleration when available</strong>‘.</li>
+</ol>
+
+<h3 id="stop-apps-from-running-in-the-background">Stop apps from running in the background</h3>
+
+<ol>
+  <li>Open ‘<strong>Microsoft Edge</strong>‘.</li>
+  <li>Click the hamburger button at the top right.</li>
+  <li>Click ‘<strong>Settings</strong>‘.</li>
+  <li>Click ‘<strong>System</strong>‘.</li>
+  <li>Disable ‘<strong>Continue running background apps when Microsoft Edge is closed</strong>‘.</li>
+</ol>
+
+<h3 id="stop-preloading-microsoft-edge-in-memory">Stop preloading Microsoft Edge in memory</h3>
+
+<ol>
+  <li>Open ‘<strong>Microsoft Edge</strong>‘.</li>
+  <li>Click the hamburger button at the top right.</li>
+  <li>Click ‘<strong>Settings</strong>‘.</li>
+  <li>Click ‘<strong>System</strong>‘.</li>
+  <li>Disable ‘<strong>Use startup boost</strong>‘.</li>
+</ol>]]></content><author><name>Jonas Hendrickx</name></author><category term="Microsoft" /><summary type="html"><![CDATA[Build]]></summary></entry><entry><title type="html">Using Lenovo Vantage Camera Privacy Feature</title><link href="/2021/03/19/using-lenovo-vantage-camera-privacy-feature/" rel="alternate" type="text/html" title="Using Lenovo Vantage Camera Privacy Feature" /><published>2021-03-19T12:29:19-05:00</published><updated>2021-03-19T12:29:19-05:00</updated><id>/2021/03/19/using-lenovo-vantage-camera-privacy-feature</id><content type="html" xml:base="/2021/03/19/using-lenovo-vantage-camera-privacy-feature/"><![CDATA[<p>Both <a href="https://www.lenovo.com/us/en/software/vantage" target="_blank" rel="noopener">Lenovo Vantage</a> and <a href="https://www.microsoft.com/en-us/p/commercial-vantage/9nr5b8gvvm13" target="_blank" rel="noopener">Lenovo Commercial Vantage</a> are underrated applications that come preinstalled. If you’re the lucky owner of a ThinkPad, you can install Commercial Vantage, which is more lightweight, has less advertisements and contains <a href="https://support.lenovo.com/es/en/solutions/hf003321-lenovo-vantage-for-enterprise" target="_blank" rel="noopener">extra features for IT administrators</a>.<figure class="wp-block-image size-large"></figure></p>
+
+<p><img loading="lazy" width="1024" height="733" src="https://www.jonashendrickx.com/wp-content/uploads/2021/03/lenovo-vantage-camera-privacy-1-1024x733.jpg" alt="" class="wp-image-645" srcset="https://www.jonashendrickx.com/wp-content/uploads/2021/03/lenovo-vantage-camera-privacy-1-1024x733.jpg 1024w, https://www.jonashendrickx.com/wp-content/uploads/2021/03/lenovo-vantage-camera-privacy-1-300x215.jpg 300w, https://www.jonashendrickx.com/wp-content/uploads/2021/03/lenovo-vantage-camera-privacy-1-768x549.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2021/03/lenovo-vantage-camera-privacy-1.jpg 1202w" sizes="(max-width: 1024px) 100vw, 1024px" /> &lt;/figure&gt;</p>
+
+<p>Both applications contain a setting called ‘<strong>Camera Privacy Mode</strong>‘. Whenever enabled, your camera will show up as disabled for any application attempting to use your camera.</p>
+
+<p>In times of remote working, you may or may not want to use this setting if you frequently join online meetings. Think of for example of situations where your significant other or your children may be running in the background. Or you want to just talk to your co-workers in a relaxed way without having to worry over how you look.</p>
+
+<p>I generally keep this setting enabled if I know I’m not going to use my camera.</p>
+
+<p>Alternatively, Lenovo has also introduced the ‘<a href="https://twitter.com/lenovo/status/1013048255968497664" target="_blank" rel="noopener">ThinkShutter</a>‘ in 2018, which allows you to slide a little piece of plastic in front of your camera rather than using duct ape. The ‘ThinkShutter’ as the name suggests is only available on Think-branded products and cannot be installed afterwards.</p>]]></content><author><name>Jonas Hendrickx</name></author><category term="Lenovo" /><summary type="html"><![CDATA[Both Lenovo Vantage and Lenovo Commercial Vantage are underrated applications that come preinstalled. If you’re the lucky owner of a ThinkPad, you can install Commercial Vantage, which is more lightweight, has less advertisements and contains extra features for IT administrators.]]></summary></entry><entry><title type="html">How to publish NuGet packages to Azure Artifacts</title><link href="/2021/03/17/how-to-publish-nuget-packages-to-azure-artifacts/" rel="alternate" type="text/html" title="How to publish NuGet packages to Azure Artifacts" /><published>2021-03-17T11:00:00-05:00</published><updated>2021-03-17T11:00:00-05:00</updated><id>/2021/03/17/how-to-publish-nuget-packages-to-azure-artifacts</id><content type="html" xml:base="/2021/03/17/how-to-publish-nuget-packages-to-azure-artifacts/"><![CDATA[<h2 id="installing-the-credentials-provider">Installing the credentials provider</h2>
+
+<p>You’ll need to install credentials provider for the interactive authentication. This can be downloaded <a href="https://github.com/microsoft/artifacts-credprovider" target="_blank" rel="noreferrer noopener">here</a>. I’d recommend using the Powershell script which can be downloaded from the Github repository. You may require to allow execution of this Powershell script as shown below, don’t forget to revert it to whatever you were using previously.</p>
+
+<pre class="wp-block-preformatted">Set-ExecutionPolicy Unrestricted</pre>
+
+<p>The default execution policy is ‘Undefined’.</p>
+
+<h2 id="generating-a-personal-access-token-pat">Generating a Personal Access Token (PAT)</h2>
+
+<p>Read the documentation below to generate a personal access token.</p>
+
+<p><a href="https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&amp;tabs=preview-page">https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops&amp;tabs=preview-page</a></p>
+
+<h2 id="building-the-package">Building the package</h2>
+
+<p>First we’ll have to set a version or increment the version of the assembly. To do this, open ‘Visual Studio’, and in ‘<strong>Solution Explorer</strong>‘, right-click your project and choose ‘<strong>Properties</strong>‘. Then navigate to the ‘<strong>Package</strong>‘ tab where you can set the ‘<strong>Package version</strong>‘.</p>
+
+<p>In ‘Visual Studio’, and make sure ‘<strong>Solution Explorer</strong>‘ is open. Then just right-click your project and choose ‘<strong>Pack</strong>‘.</p>
+
+<h2 id="publishing-the-package">Publishing the package</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>[Publish a NuGet package using the command line – Azure Artifacts</td>
+      <td>Microsoft Docs](https://docs.microsoft.com/en-us/azure/devops/artifacts/nuget/publish?view=azure-devops)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>You’ll have to put a ‘nuget.config’ file with the feed’s name in your project directory.</p>
+
+<pre class="wp-block-preformatted">dotnet nuget push --source "MyFeed" --api-key yourkeygoeshere .\bin\Release\My.First.NuGet.1.0.0.nupkg --interactive</pre>
+
+<p>The ‘–interactive’ flag might only be required the first time.</p>
+
+<h2 id="note">Note</h2>
+
+<p>Ideally you want a GitFlow-like way of working and create a release pipeline for publishing the package from your main branch. This avoids that developers are publishing a NuGet package before their code is actually approved and merged into the main branch for use by other team members.</p>]]></content><author><name>Jonas Hendrickx</name></author><category term="Programming" /><summary type="html"><![CDATA[Installing the credentials provider]]></summary></entry><entry><title type="html">How to turn on keyboard backlight at boot for ThinkPads?</title><link href="/2021/03/16/how-to-turn-on-keyboard-backlight-at-boot-for-thinkpads/" rel="alternate" type="text/html" title="How to turn on keyboard backlight at boot for ThinkPads?" /><published>2021-03-16T07:18:19-05:00</published><updated>2021-03-16T07:18:19-05:00</updated><id>/2021/03/16/how-to-turn-on-keyboard-backlight-at-boot-for-thinkpads</id><content type="html" xml:base="/2021/03/16/how-to-turn-on-keyboard-backlight-at-boot-for-thinkpads/"><![CDATA[<p>If you’re reading this article, you’re most likely interested in trying to enable your keyboard backlight at boot for your Lenovo laptop or ThinkPad. By design, Lenovo has disabled this.</p>
+
+<p>Before continuing, you have to know that you risk burning out the keyboard backlight LEDs by having them lit 24/7.</p>
+
+<h2 id="installing-the-dependencies">Installing the dependencies</h2>
+
+<p>The solution discussed in this article depends on having <a href="https://support.lenovo.com/es/es/downloads/ds105970-lenovo-system-interface-foundation-for-windows-10-32-bit-64-bit-thinkpad-thinkcentre-ideapad-ideacentre-thinkstation" target="_blank" rel="noopener">Lenovo System Interface Foundation Driver</a> installed. If you are using Lenovo Vantage or Lenovo Commercial Vantage, chances are you may already have it installed. If you don’t know how to check whether Lenovo System Interface Foundation Driver is installed, read <a href="https://support.microsoft.com/en-us/windows/how-to-check-if-an-app-or-program-is-installed-in-windows-10-5af73cea-f875-dfa0-4cd1-72a02aa06436" target="_blank" rel="noopener">this guide</a> by Microsoft.</p>
+
+<h2 id="research">Research</h2>
+
+<h3 id="interacting-with-the-keyboard">Interacting with the keyboard</h3>
+
+<p>We know the majority of plug-ins for Lenovo System Interface Foundation Driver are installed in ‘<strong>C:\ProgramData\Lenovo\ImController\Plugins</strong>‘.</p>
+
+<p>We are most interested in the ‘<strong>ThinkKeyboardPlugin</strong>‘ folder. With a .NET decompiler, we can see the source code of some of these files. We’re going to open:</p>
+
+<ul>
+  <li>Contract_Keyboard.dll (dependency of Keyboard_Core.dll)</li>
+  <li>Keyboard_Core.dll</li>
+</ul>
+
+<p>As we suspected ‘Keyboard_Core.dll’ contains a class ‘KeyboardControl’ in the ‘Keyboard_Core’ namespace. Here we find a method ‘<strong><span class="pl-smi">SetKeyboardBackLightStatus</span>(param1<span class="pl-k">,</span> param2);</strong>‘.</p>
+
+<p>If you have an older version of the driver installed, you’ll see this method with only 1 parameter, in which case you will not have to pass ‘null’ invoking this function.</p>
+
+<p>In the references, note there’s a dependency of ‘Contract_Keyboard.dll’.</p>
+
+<p>Take a note of the fact that both are in the x86 folder, so they’re 32-bit libraries.</p>
+
+<h3 id="where-do-we-hook-this">Where do we hook this?</h3>
+
+<p>Ok we’re definitely going to want to execute a script upon starting our ThinkPad, right? But what happens if our machine goes to sleep or goes into hibernation?</p>
+
+<p>By right-clicking the start menu button in Windows 10, we can open ‘<strong>Event Viewer</strong>‘. Expand ‘<strong>Windows Logs</strong>‘ in the left hand pane and open ‘<strong>System</strong>‘.</p>
+
+<p>Now we need to find the ‘Source’ or the event publisher’s name. Put your computer to sleep and hibernation, and find an event that looks like it’s being published every time your ThinkPad wakes up.</p>
+
+<p>There is one indeed, the ‘<strong>Source</strong>‘ is ‘<strong>Power-Troubleshooter</strong>‘ which published an event with ‘<strong>EventId</strong>‘ being ‘<strong>1</strong>‘.</p>
+
+<p>To keep things easy, we’re going to use Powershell, something changes the way these libraries work, we can quickly re-write our script. We will have to use a 32-bit Powershell as we’re going to invoke 64-bit libraries. The 32-bit Powershell is found in the directory ‘<strong>C:\Windows\syswow64\WindowsPowerShell\v1.0\powershell.exe</strong>‘.</p>
+
+<h2 id="writing-the-script">Writing the script</h2>
+
+<p><a href="https://github.com/jonashendrickx/lenovo-powershell/blob/main/auto-keyboard-backlight/auto-keyboard-backlight.ps1">lenovo-powershell/auto-keyboard-backlight.ps1 at main · jonashendrickx/lenovo-powershell · GitHub</a></p>
+
+<p>Scott Hanselman has written a <a href="https://www.hanselman.com/blog/signing-powershell-scripts" target="_blank" rel="noopener">good article on signing Powershell scripts</a>. You’ll want to do this if you don’t want to set the Powershell execution policy to unrestricted or something else. We’ll want to sign the Powershell script.</p>
+
+<h3 id="installation-of-the-script">Installation of the script</h3>
+
+<p>If you want to schedule the script, we’ll need to do this with task scheduler. This will cover:</p>
+
+<ul>
+  <li>Boot</li>
+  <li>Sleep &amp; wakeup</li>
+  <li>Hibernation &amp; wakeup</li>
+</ul>
+
+<p>To schedule with Task Scheduler:</p>
+
+<ol>
+  <li>Click ‘<strong>Create Task</strong>‘.</li>
+  <li>Choose ‘<strong>Run whether user is logged in or not</strong>‘. (Make use sure user that executes script has permissions to run on this machine.)</li>
+  <li>Add a trigger ‘<strong>At startup</strong>‘.</li>
+  <li>Add a trigger ‘<strong>On an event</strong>‘ if you want to support sleep and hibernation. You’ll need to find the EventID in Windows Event Manager.
+    <ol>
+      <li>Log: ‘System’</li>
+      <li>Source: ‘Power-Troubleshooter’</li>
+      <li>EventID: 1</li>
+    </ol>
+  </li>
+  <li>Add an action with ‘<strong>Program/script</strong>‘ location set to ‘<strong>C:\Windows\syswow64\WindowsPowerShell\v1.0\powershell.exe</strong>‘ and parameters ‘<strong>-File “path\to\script\auto-keyboard-backlight.ps1”</strong>‘</li>
+</ol>]]></content><author><name>Jonas Hendrickx</name></author><category term="Lenovo" /><category term="Programming" /><category term="Uncategorized" /><summary type="html"><![CDATA[If you’re reading this article, you’re most likely interested in trying to enable your keyboard backlight at boot for your Lenovo laptop or ThinkPad. By design, Lenovo has disabled this.]]></summary></entry><entry><title type="html">How to setup next-i18next for next.js?</title><link href="/2020/05/06/how-to-setup-next-i18next-for-next-js/" rel="alternate" type="text/html" title="How to setup next-i18next for next.js?" /><published>2020-05-06T02:53:51-05:00</published><updated>2020-05-06T02:53:51-05:00</updated><id>/2020/05/06/how-to-setup-next-i18next-for-next-js</id><content type="html" xml:base="/2020/05/06/how-to-setup-next-i18next-for-next-js/"><![CDATA[<h2 id="setting-up-your-nextjs-project">Setting up your next.js project</h2>
+
+<p>First, visit the <a rel="noreferrer noopener" href="https://nextjs.org/docs/getting-started#setup" target="_blank">next.js website</a> to setup your project, scroll down to the setup section. If you have installed node, you should be able to execute the command below immediately as described on the next.js website.</p>
+
+<pre class="wp-block-code"><code>npm init next-app</code></pre>
+
+<h2 id="installing-next-i18next-and-its-dependencies">Installing next-i18next and its dependencies</h2>
+
+<p>You may have to install several dependencies:</p>
+
+<ul>
+  <li>express</li>
+  <li>i18next</li>
+  <li>next-i18next</li>
+</ul>
+
+<h2 id="integrating-next-i18next">Integrating next-i18next</h2>
+
+<p>Make sure you have the necessary dependencies as shown below with the correct scripts configured in ‘packages.json’.</p>
+
+<p>https://gist.github.com/jonashendrickx/c37e4d3ff1b411e4318ad66f7e357313#file-packages-json</p>
+
+<p>You can modify any settings for next-i18next in your ‘next.config.js’. Make sure you define and export it as shown below.</p>
+
+<p>https://gist.github.com/jonashendrickx/c37e4d3ff1b411e4318ad66f7e357313#file-next-config-js</p>]]></content><author><name>Jonas Hendrickx</name></author><category term="Programming" /><summary type="html"><![CDATA[Setting up your next.js project]]></summary></entry><entry><title type="html">Reading certificates in Powershell</title><link href="/2020/02/10/reading-certificates-in-powershell/" rel="alternate" type="text/html" title="Reading certificates in Powershell" /><published>2020-02-10T05:48:42-06:00</published><updated>2020-02-10T05:48:42-06:00</updated><id>/2020/02/10/reading-certificates-in-powershell</id><content type="html" xml:base="/2020/02/10/reading-certificates-in-powershell/"><![CDATA[<p>While I was doing research on how to read certificates in Powershell. I was mostly finding the same solutions over and over again.</p>
+
+<h2 id="reading-from-multiple-servers">Reading from multiple servers</h2>
+
+<p>I needed a script that was able to retrieve information of certificates of a couple of servers on the domain. ‘Invoke-Command’ seemed a little bit insecure. And you needed to allow running remote commands on every server you wanted to run your script.</p>
+
+<p><strong>Create a Powershell module called ‘Certificates.psm1’.</strong> You’ll be able to re-use and import the code below assuming you want to run some scripts with a different frequency.</p>
+
+<p>The code is pretty much self-explanatory.</p>
+
+<p>[code lang=”powershell”]<br />
+[string[]]$servers = “WEB01”, “WEB02”;<br />
+[string[]]$storeLocations = “CurrentUser”, “LocalMachine”;<br />
+[string[]]$storeNames = “AddressBook”, “AuthRoot”, “CertificateAuthority”, “Disallowed”, “My”, “Root”, “TrustedPeople”, “TrustedPublisher”;</p>
+
+<p>function Get-Certificates() {<br />
+[System.Security.Cryptography.X509Certificates[]] $certificates = @();</p>
+
+<p>foreach ($server in $servers) {<br />
+foreach ($storeLocation in $storeLocations) {<br />
+foreach ($storeName in $storeNames) {<br />
+$store = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Store(“\$($server)$($storeName)”, $storeLocation);<br />
+try {<br />
+$store.Open(0);<br />
+$certificates += $store.Certificates;<br />
+} catch {<br />
+Write-Output “Error opening certificate store $($server) $($storeLocation) $($storeName)”;<br />
+continue;<br />
+} finally {<br />
+$store.Close();<br />
+}<br />
+}<br />
+}<br />
+}<br />
+return $certificates;<br />
+}</p>
+
+<p>Export-ModuleMember -Function Get-Certificates<br />
+[/code]</p>
+
+<h2 id="retrieve-certificates-about-to-expire">Retrieve certificates about to expire</h2>
+
+<p>[code lang=”powershell”]<br />
+param(<br />
+[string]$Days = 90<br />
+);</p>
+
+<p>Import-Module ./Certificates.psm1;</p>
+
+<p>$certificates = Get-Certificates;</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>$expiringCertificates = $certificates</td>
+      <td>Where-Object {$_.NotAfter -gt (Get-Date) -and $_.NotAfter -lt (Get-Date).AddDays($Days)}</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>if ($expiringCertificates.Count -gt 0) {</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>$formattedOutputString = $expiringCertificates</td>
+      <td>Format-Table Thumbprint, Subject</td>
+      <td>Out-String;</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>}<br />
+[/code]</p>
+
+<h2 id="retrieve-certificates-that-are-not-sha-256">Retrieve certificates that are not SHA-256</h2>
+
+<p>You may want to find if there are less secure certificates on your server.</p>
+
+<p>[code lang=”powershell”]<br />
+Import-Module ./Certificates.psm1;</p>
+
+<p>$certificates = Get-Certificates;</p>
+
+<p>$insecureCertificates = $certificates |<br />
+Where-Object {$_.SignatureAlgorithm.FriendlyName -and $_.SignatureAlgorithm.FriendlyName -ne ‘sha256RSA’} |<br />
+Select-Object -Property ‘DnsNameList’, ‘Subject’, @{<br />
+Name = “Algorithm”<br />
+Expression = {$<em>.SignatureAlgorithm.FriendlyName}<br />
+}, @{<br />
+Name = “KeyLength”,<br />
+Expression = {$</em>.PublicKey.Key.KeySize}<br />
+}, “NotAfter”, “NotBefore”;</p>
+
+<p>if ($insecureCertificates.Count -gt 0) {<br />
+…<br />
+}<br />
+[/code]</p>
+
+<h2 id="scheduling-your-powershell-script">Scheduling your Powershell script</h2>
+
+<p>You can schedule your Powershell script with ‘Task Scheduler’. It’s good practice to run the script under a service account. When using a service account, you should make sure the account has ‘Logon as a batch’ permissions granted on the server where the Powershell script is scheduled. If you happen to forget this step, you’ll be reminded.</p>]]></content><author><name>Jonas Hendrickx</name></author><category term="Programming" /><category term="Powershell" /><summary type="html"><![CDATA[While I was doing research on how to read certificates in Powershell. I was mostly finding the same solutions over and over again.]]></summary></entry><entry><title type="html">Downloading files from SharePoint with Graph SDK</title><link href="/2020/02/03/downloading-files-from-sharepoint-with-graph-sdk/" rel="alternate" type="text/html" title="Downloading files from SharePoint with Graph SDK" /><published>2020-02-03T15:30:00-06:00</published><updated>2020-02-03T15:30:00-06:00</updated><id>/2020/02/03/downloading-files-from-sharepoint-with-graph-sdk</id><content type="html" xml:base="/2020/02/03/downloading-files-from-sharepoint-with-graph-sdk/"><![CDATA[<p>This tutorial was written with Microsoft SharePoint Online in mind. If you’re using on-premises, things may not work out as expected.</p>
+
+<p>There are several other ways you can go about this, for example using client id and client secret or a certificate. We will use a service account in our example.</p>
+
+<h2 id="requesting-our-service-account">Requesting our service account</h2>
+
+<p>In our case, we wanted to expose certain document libraries to the public. We will not require users to authenticate with our API. I went with a service account because it was straight forward and convenient coming from CSOM which only seems to work with .NET Framework at this time and not .NET Core.</p>
+
+<ol>
+  <li>Visit the ‘<strong>Microsoft Office 365 Admin Center</strong>‘.</li>
+  <li>Create a new user, and save the credentials. Disable any 2FA authentication if enabled. At the first sign in, sometimes you may have to link an e-mail or telephone number for a back-up.</li>
+  <li>Assign the required license.</li>
+  <li>Assign ‘User’ role, or more if necessary.</li>
+</ol>
+
+<p>Now the user is setup, we will create our enterprise application.</p>
+
+<ol>
+  <li>In the menu, open ‘<strong>Azure AD</strong>‘ or ‘Azure Active Directory’, this will bring you to the ‘<strong>Azure Active Directory admin center</strong>‘.</li>
+  <li>You will see ‘<strong>Enterprise Applications</strong>‘ in the menu, open it and proceed to create a new application.</li>
+  <li>You’re now asked to select the appropriate application type, we will use ‘<strong>application you’re developing</strong>‘ for our demo. Our demo will be a standalone ASP.NET Core API or Azure Function.</li>
+  <li>Now click ‘<strong>Ok, take me to App Registrations to register my new application.</strong>‘ to proceed to ‘<strong>App Registrations</strong>‘.</li>
+  <li>Click ‘<strong>New Registration</strong>‘ at the top.</li>
+  <li>Give it a meaningful name.</li>
+  <li>To keep our sanity, we will only use users in our active directory so for ‘<strong>Supported Account Types</strong>‘ we choose ‘<strong>Accounts in this organizational directory only (Single tenant)</strong>‘.</li>
+  <li>Click ‘Register’.<img loading="lazy" width="1692" height="850" class="wp-image-533" style="width: 600px;" src="https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial.jpg" alt="" srcset="https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial.jpg 1692w, https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial-300x151.jpg 300w, https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial-1024x514.jpg 1024w, https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial-768x386.jpg 768w, https://www.jonashendrickx.com/wp-content/uploads/2020/03/sharepoint-graph-sdk-tutorial-1536x772.jpg 1536w" sizes="(max-width: 1692px) 100vw, 1692px" /></li>
+  <li>Take a note of the ‘<strong>Application Id</strong>‘ (‘Client Id’) and ‘Directory Id’ (‘<strong>Tenant Id</strong>‘).</li>
+  <li>In ‘<strong>Authentication</strong>‘, set ‘<strong>Treat application as a public client.</strong>‘ to ‘<strong>Yes</strong>‘ and click ‘Save’.</li>
+  <li>Now go to ‘<strong>API Permissions</strong>‘.</li>
+  <li>Click ‘<strong>Add a permission</strong>‘.</li>
+  <li>Find and click the ‘<strong>SharePoint</strong>‘ tile.</li>
+  <li>Give it all the ‘<strong>Delegated</strong>‘ ‘<strong>Read</strong>‘ permissions so you have: ‘AllSites.Read’, ‘TermStore.Read.All’, ‘User.Read.All’</li>
+  <li>Then click the button ‘<strong>Grant admin consent for %username%</strong>‘.</li>
+</ol>
+
+<p>The changes could take a few minutes to propagate. Don’t panic if it doesn’t work immediately.</p>
+
+<h2 id="code">Code</h2>
+
+<h3 id="sample">Sample</h3>
+
+<p><a href="https://github.com/jonashendrickx/microsoft-graphsdk/">https://github.com/jonashendrickx/microsoft-graphsdk/</a></p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<p>You can get started by installing the required NuGet packages described at <a rel="noreferrer noopener" aria-label="this page (opens in a new tab)" href="https://docs.microsoft.com/en-us/graph/sdks/sdk-installation" target="_blank">this page</a> or below:</p>
+
+<ul>
+  <li>Microsoft.Graph</li>
+  <li>Microsoft.Graph.Auth</li>
+  <li>Microsoft.Graph.Core</li>
+  <li>(optional) System.Configuration.ConfigurationManager</li>
+</ul>
+
+<h3 id="setting-up-graph-sdk">Setting up Graph SDK</h3>
+
+<p>Follow all the instructions on <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/graph/sdks/sdks-overview" target="_blank">this page</a> to setup the Graph SDK. The required roles are <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/graph/api/driveitem-get-content?view=graph-rest-1.0&amp;tabs=http" target="_blank">mentioned next to the API calls</a>. You will have to assign these roles as mentioned above and then also add them to the Graph SDK client. You can check the sample for more details on how to do this. If your roles or permissions don’t seem to be working immediately, it’s because they might take a few minutes to take effect.</p>
+
+<p>The REST call ‘<strong>GET /sites/{siteId}/drive/items/{item-id}/content</strong>‘ would translate in C# as</p>
+
+<p>‘<strong>await _client.Sites[siteId].Drives[docLibId].Items[driveItemId].Content.Request().GetAsync()</strong>‘</p>
+
+<p>Hopefully this is enough to get you guys started! Have fun!</p>]]></content><author><name>Jonas Hendrickx</name></author><category term="Programming" /><category term="Azure Functions" /><category term="Microsoft Graph" /><category term="Microsoft Graph API" /><category term="Microsoft Graph SDK" /><category term="Microsoft SharePoint" /><summary type="html"><![CDATA[This tutorial was written with Microsoft SharePoint Online in mind. If you’re using on-premises, things may not work out as expected.]]></summary></entry></feed>
