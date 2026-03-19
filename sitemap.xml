@@ -28,7 +28,7 @@
   <url><loc>https://jonashendrickx.com/blog/2019/04/25/using-ngx-bootstraps-modal-separate-component</loc><lastmod>2019-04-25</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2019/04/22/thinkpad-p51s-linux-installation-guide</loc><lastmod>2019-04-22</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2019/04/17/how-to-fix-elan-touchpad-latency-bsod-issues</loc><lastmod>2019-04-17</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2019/02/17/remapping-the-thinkvantage-key</loc><lastmod>2019-02-17</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2019/02/16/remapping-the-thinkvantage-key</loc><lastmod>2019-02-16</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2019/02/06/lenovo-yoga-book-c930-review</loc><lastmod>2019-02-06</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2019/01/30/black-screen-thinkvision-lt1423p-windows-10</loc><lastmod>2019-01-30</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2019/01/27/replacing-thinkpad-trackpad</loc><lastmod>2019-01-27</lastmod></url>
@@ -78,7 +78,7 @@
   <url><loc>https://jonashendrickx.com/blog/2016/12/08/lenovo-yoga-book-android-review</loc><lastmod>2016-12-08</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/11/10/xamarin-access-ui-dependency-service</loc><lastmod>2016-11-10</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/11/09/tackling-common-issues-with-xamarin</loc><lastmod>2016-11-09</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2016/11/03/chose-thinkpad-music-production</loc><lastmod>2016-11-03</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2016/11/02/chose-thinkpad-music-production</loc><lastmod>2016-11-02</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/08/30/ifa-2016-lenovo-yoga-910</loc><lastmod>2016-08-30</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/08/20/gamescom-y-series-gaming-pc-hands</loc><lastmod>2016-08-20</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/06/15/logging-off-disconnected-users-automatically-on-windows-server-2012</loc><lastmod>2016-06-15</lastmod></url>
@@ -97,7 +97,7 @@
   <url><loc>https://jonashendrickx.com/blog/2016/03/31/project-server-online-license-administration</loc><lastmod>2016-03-31</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/03/17/print-list-of-assigned-licenses-in-office-365-with-powershell</loc><lastmod>2016-03-17</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/03/09/how-find-resource-task-project-customfield-value</loc><lastmod>2016-03-09</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2016/03/06/skylake-thinkpad-generation</loc><lastmod>2016-03-06</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2016/03/05/skylake-thinkpad-generation</loc><lastmod>2016-03-05</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/02/28/authentication-with-csom-in-project-server</loc><lastmod>2016-02-28</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/02/25/lenovo-yoga-home-900-shutdown-problems</loc><lastmod>2016-02-25</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2016/02/23/solving-project-server-2013-authentication-issues</loc><lastmod>2016-02-23</lastmod></url>
@@ -150,8 +150,8 @@
   <url><loc>https://jonashendrickx.com/blog/2015/05/19/lenovo-thinkpad-w550s-review</loc><lastmod>2015-05-19</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/05/15/how-to-back-up-sms-on-windows-phone-8-1</loc><lastmod>2015-05-15</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/05/14/windows-phone-8-1-vs-windows-phone-8-1-silverlight</loc><lastmod>2015-05-14</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2015/04/19/a-little-but-important-uefi-update-for-the-x240-x240s-and-x250</loc><lastmod>2015-04-19</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/04/19/duos-interview</loc><lastmod>2015-04-19</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2015/04/18/a-little-but-important-uefi-update-for-the-x240-x240s-and-x250</loc><lastmod>2015-04-18</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/04/02/microsoft-band-sdk-preview-first-experience</loc><lastmod>2015-04-02</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/03/13/enabling-gzip-compression-for-your-azure-website-iis</loc><lastmod>2015-03-13</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/03/13/how-to-configure-custom-domain-names-for-your-azure-website</loc><lastmod>2015-03-13</lastmod></url>
@@ -175,8 +175,8 @@
   <url><loc>https://jonashendrickx.com/blog/2015/01/05/haswell-overclocking-and-undervolting-guide</loc><lastmod>2015-01-05</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/01/05/how-to-fix-intel-centrino-7260-wireless-ac-latency-spikes-lag</loc><lastmod>2015-01-05</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/01/05/lenovo-announces-broadwell-thinkpads-t450-x250-w550s-with-trackpoint-buttons-a-closer-look</loc><lastmod>2015-01-05</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2015/01/04/how-to-swap-function-keys-and-media-keys-on-haswell-thinkpads</loc><lastmod>2015-01-04</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2015/01/04/lenovo-thinkpad-w540-review</loc><lastmod>2015-01-04</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2015/01/03/how-to-swap-function-keys-and-media-keys-on-haswell-thinkpads</loc><lastmod>2015-01-03</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/12/22/809</loc><lastmod>2014-12-22</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/12/21/lenovo-yoga-2-tabet-10-review</loc><lastmod>2014-12-21</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/12/13/getting-mobile-broadband-working-in-the-x1-carbon-2nd-gen</loc><lastmod>2014-12-13</lastmod></url>
@@ -221,8 +221,8 @@
   <url><loc>https://jonashendrickx.com/blog/2014/08/28/how-to-enable-f8-key-to-go-into-safe-mode-upon-boot-for-windows-8-and-later</loc><lastmod>2014-08-28</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/08/28/thinkpad-8-tablet-a-tablet-that-does-more</loc><lastmod>2014-08-28</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/08/28/windows-phone-8-1-review</loc><lastmod>2014-08-28</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2014/08/24/carpet-screen-issue-on-thinkpad-x1-carbon-gen-2</loc><lastmod>2014-08-24</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/08/24/color-profiles-for-current-thinkpads</loc><lastmod>2014-08-24</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2014/08/23/carpet-screen-issue-on-thinkpad-x1-carbon-gen-2</loc><lastmod>2014-08-23</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/08/21/diagnose-touch-screen-issue-in-lenovo-laptop</loc><lastmod>2014-08-21</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/08/18/changing-the-amount-of-pre-allocated-vram-memory</loc><lastmod>2014-08-18</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2014/08/17/thinkpad-t440s-review</loc><lastmod>2014-08-17</lastmod></url>
@@ -251,13 +251,13 @@
   <url><loc>https://jonashendrickx.com/blog/2013/04/10/how-to-make-your-thinkpad-tablet-2-charge-faster</loc><lastmod>2013-04-10</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/04/10/thinkpad-tablet-2-internal-storage-performance</loc><lastmod>2013-04-10</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/04/10/thinkpad-tablet-2-wacom-stylus-compatibility</loc><lastmod>2013-04-10</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2013/04/08/can-you-swap-a-non-backlit-chiclet-keyboard-with-a-backlit-version-in-your-thinkpad</loc><lastmod>2013-04-08</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/04/08/lenovo-thinkpad-x-series-keyboard-intercompatibility-matrix</loc><lastmod>2013-04-08</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/04/08/thinkpad-msata-speed-and-specification</loc><lastmod>2013-04-08</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/04/08/thinkpad-t530-and-t530i-without-amt</loc><lastmod>2013-04-08</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/04/08/which-thinkpad-has-msata-slot</loc><lastmod>2013-04-08</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2013/04/07/battery-reset-procedure-for-thinkpad</loc><lastmod>2013-04-07</lastmod></url>
-  <url><loc>https://jonashendrickx.com/blog/2013/04/07/solution-lenovo-logo-or-emblem-replacement</loc><lastmod>2013-04-07</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2013/04/07/can-you-swap-a-non-backlit-chiclet-keyboard-with-a-backlit-version-in-your-thinkpad</loc><lastmod>2013-04-07</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2013/04/06/battery-reset-procedure-for-thinkpad</loc><lastmod>2013-04-06</lastmod></url>
+  <url><loc>https://jonashendrickx.com/blog/2013/04/06/solution-lenovo-logo-or-emblem-replacement</loc><lastmod>2013-04-06</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/04/01/how-to-change-monitor-refresh-rate-on-thinkpad-in-windows-7</loc><lastmod>2013-04-01</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/03/30/thinkcentre-m92p-tiny-displayport</loc><lastmod>2013-03-30</lastmod></url>
   <url><loc>https://jonashendrickx.com/blog/2013/02/13/thinkpad-r61-external-screen-support-on-dock</loc><lastmod>2013-02-13</lastmod></url>
